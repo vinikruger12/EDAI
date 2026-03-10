@@ -7,7 +7,7 @@ typedef struct teste{
 } informacao;
 
 int main(){
-    informacao *p, x = {321, 2.39, "Silva"};
+    informacao *p = NULL, x = {321, 2.39, "Silva"};
     p = &x;
     if(p != NULL){
         printf("Ponteiro inicializado corretamente! \n");

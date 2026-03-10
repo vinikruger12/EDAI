@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef struct teste{ 
+typedef struct { 
     int inteiro;
     float real;
     char nome[30];
