@@ -82,7 +82,7 @@ int main(){
     }
 
     insert(10, stk);
-    insert(20, stk);
+    insert(20, stk); 
     insert(30, stk);
 
 
