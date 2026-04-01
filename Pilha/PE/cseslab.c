@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+void reverse_str(char *s, int len){
+    for(int i = 0; i < len/2; i++){
+        char temp = s[i];
+        s[i] = s[len - i - 1];
+        s[len - i - 1] = temp;
+    }
+}
+
 typedef struct {
     int x;
     int y;
@@ -75,42 +83,51 @@ struct stack *destroi(struct stack *stk){
     }
     return NULL;
 }
-
+int menor(int a , int b){
+    if(b < a)return b;
+    else return a;
+}
 int main(){
-    struct stack *caminho = cria(100);
 
-    int labirinto[10][10], vis[10][10];
-    for(int i = 0;i < 10;i++){
-        for(int j = 0;j < 10;j++){
-            scanf("%d", &labirinto[i][j]);
+    int n, m; scanf("%d %d", &n, &m);
+    struct stack *caminho = cria(n * m);
+    info inicio;
+    char labirinto[n][m], vis[n][m];
+    for(int i = 0;i < n;i++){
+        for(int j = 0;j < m;j++){
+            scanf(" %c", &labirinto[i][j]);
+            if(labirinto[i][j] == 'A'){
+                inicio.x = i;
+                inicio.y = j;
+            }
             vis[i][j] = 0;
         }
     }
 
-    int m, n;
-    scanf("%d %d", &m, &n);
-    info posicaoDeSaida = {m, n};
-    int achou = 0;
 
-    int i = 0, j = 0;
-    info first = {i, j};
-    empilha(&first, caminho);
-    vis[0][0] = 1;
+    info posicaoDeSaida = {m, n};
+    int menorCaminho = 0;
+    int achou = 0;
+    int i = inicio.x, j = inicio.y;
+    empilha(&inicio, caminho);
+    vis[i][j] = 1;
 
     int dx[4] = {0, 1, 0, -1}; // direita, baixo, esquerda, cima
     int dy[4] = {1, 0, -1, 0};
 
-    while(!achou && !vazia(caminho)){
+    while(!vazia(caminho)){
 
-        if(caminho->vet[caminho->topo].x == posicaoDeSaida.x 
-        && caminho->vet[caminho->topo].y == posicaoDeSaida.y) achou = 1;
+        if(labirinto[i][j] == 'B'){
+            achou = 1;
+            menorCaminho = menor((caminho->topo) +1, menorCaminho);
+        } 
         
         int moveu = 0;
         for(int k = 0;k < 4;k++){
             int ni = i + dx[k];
             int nj = j + dy[k];
 
-            if(ni >= 0 && ni < 10 && nj >= 0 && nj < 10 && labirinto[ni][nj] == 0 && vis[ni][nj] == 0){
+            if(ni >= 0 && ni < n && nj >= 0 && nj < m && (labirinto[ni][nj] == '.' || labirinto[ni][nj] == 'B') && vis[ni][nj] == 0){
                 j = nj;
                 i = ni;
 
@@ -132,6 +149,41 @@ int main(){
         }
     }
 
-    printf("Voce teve que andar %d casas até conseguir sair do labirinto\n", caminho->topo + 1);
+    if(!achou){
+    printf("NO\n");
+}
+else{
+    int ko = caminho->topo + 1;
+    printf("YES\n");
+    printf("%d\n", menorCaminho);
+
+    char s[n * m];
+    int idx = 0;
+
+    info reg;
+    busca(&reg, caminho);
+    int a = reg.x;
+    int b = reg.y;
+
+    while(!vazia(caminho)){
+        desempilha(caminho);
+        if(vazia(caminho)) break;
+
+        busca(&reg, caminho);
+
+        if(reg.x == a - 1) s[idx++] = 'D';
+        else if(reg.x == a + 1) s[idx++] = 'U';
+        else if(reg.y == b - 1) s[idx++] = 'R';
+        else if(reg.y == b + 1) s[idx++] = 'L';
+
+        a = reg.x;
+        b = reg.y;
+    }
+
+    s[idx] = '\0';
+    reverse_str(s, idx);
+    printf("%s\n", s);
+}
+    
 
 }

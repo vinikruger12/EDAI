@@ -137,6 +137,6 @@ int main(){
         }
     }
 
-    printf("Voce teve que andar %d casas até conseguir sair do labirinto\n", caminho->topo);
+    printf("Voce teve que andar %d casas até conseguir sair do labirinto\n", caminho->topo + 1);
 
 }
