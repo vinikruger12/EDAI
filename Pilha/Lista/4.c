@@ -1,8 +1,26 @@
+#include "arqPDE.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "arqPDE.h"
 
+int inverte(struct stack *stk){
+    if(stk == NULL || vazia(stk)) return 0;
+
+    struct Node *aux = stk->top;
+    while(aux->under != NULL){
+        aux = aux->under;
+    }
+    stk->top = aux;
+    struct Node *aux2 = stk->top;
+    
+    while(aux2 != NULL){
+        struct Node *temp = aux2->under;
+        aux2->under = aux2->upper;
+        aux2->upper = temp;
+        aux2 = aux2->under;
+    }
+    return 1;
+}
 
 int main(){
     struct stack *pilha = cria();
@@ -29,14 +47,10 @@ int main(){
         aux = aux->under;
     }
 
+    inverte(pilha);
     aux = pilha->top;
-    while(aux->under != NULL){
-        aux = aux->under;
-    }
-
     while(aux != NULL){
         printf("%d \n", aux->dados.x);
-        aux = aux->upper;
+        aux = aux->under;
     }
-
 }

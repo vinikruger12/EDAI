@@ -1,8 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "arqPDE.h"
+#include "arqPSE.h"
 
+int contaNos(struct stack *stk){
+    int n = 0;
+    if(stk == NULL || vazia(stk)) return 0;
+
+    struct Node *aux = stk->top;
+    while(aux != NULL){
+        n++;
+        aux = aux->under;
+    }
+    return n;
+
+}
 
 int main(){
     struct stack *pilha = cria();
@@ -22,21 +34,5 @@ int main(){
     insert(&c, pilha);
     insert(&d, pilha);
     insert(&e, pilha);
-
-    struct Node *aux = pilha->top;
-    while(aux != NULL){
-        printf("%d \n", aux->dados.x);
-        aux = aux->under;
-    }
-
-    aux = pilha->top;
-    while(aux->under != NULL){
-        aux = aux->under;
-    }
-
-    while(aux != NULL){
-        printf("%d \n", aux->dados.x);
-        aux = aux->upper;
-    }
-
+    printf("A pilha tem %d nós\n", contaNos(pilha));
 }

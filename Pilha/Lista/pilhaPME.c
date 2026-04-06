@@ -1,0 +1,107 @@
+#include "arqPME.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int cheia(struct stack *stk, int n){
+    if(n == 1) if((stk->topo1) >= (stk->topo2)) return 1;
+    if(n == 2) if((stk->topo2 <= (stk->topo1))) return 1;
+    return 0;
+}
+
+int vazia(struct stack *stk, int n){
+    if(n == 1) if(stk->topo1 < 0) return 1;
+    if(n == 2) if(stk->topo2 == stk->tam) return 1;
+    return 0;
+}
+
+struct stack *cria(int tam){
+    struct stack *stk = NULL;
+    stk = malloc(sizeof(struct stack));
+
+    if(stk){
+        stk->vet = malloc(sizeof(info) * tam);
+        if(stk->vet){
+            stk->topo1 = -1;
+            stk->topo2 = tam;
+            stk->tam = tam;
+        }
+        else{
+            free(stk);
+            stk = NULL;
+        }
+    }
+    return stk;
+}
+
+int empilha(info *reg, struct stack *stk, int n){
+    
+    
+    if(n == 1 && !cheia(stk, 1)){
+        (stk->topo1)++;
+        memcpy(&(stk->vet[stk->topo1]), reg, sizeof(info));
+        return 1;    
+    }
+    else if(n == 2 && !cheia(stk, 2)){
+        (stk->topo2)--;
+        memcpy(&(stk->vet[stk->topo2]), reg, sizeof(info));
+        return 1;
+    }
+    return 0;
+}
+
+int desempilha(struct stack *stk, int n){
+    if(n == 1 && !vazia(stk, 1)){
+        (stk->topo1)--;
+        return 1;
+    }
+    else if(n == 2 && !vazia(stk, 2)){
+        (stk->topo2)++;
+        return 1;
+    }
+    return 0;
+}
+
+int reinicia(struct stack *stk, int n){
+    if(stk == NULL) return 0;
+
+    if(n == 1) stk->topo1 = -1;
+    else if(n == 2) stk->topo2 = stk->tam;
+
+    return 1;
+}
+
+int busca(info *reg,struct stack *stk, int n){
+    if(n == 1){
+        if(!vazia(stk, 1)){
+            *reg = stk->vet[stk->topo1];
+            return 1;
+        }
+    }
+    else if(n == 2){
+        if(!vazia(stk, 2)){
+            *reg = stk->vet[stk->topo2];
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int numeroDeEmpilhados(struct stack *stk, int n){
+    if(stk == NULL || vazia(stk, n)) return 0;
+    
+    if(n == 1) return stk->topo1 + 1;
+    if(n == 2) return (stk->tam - stk->topo2);  
+    
+    return 0;
+}
+
+struct stack *destroi(struct stack *stk){
+    
+    if(stk){
+        free(stk->vet);
+        free(stk);
+    }
+    return NULL;
+}
+
