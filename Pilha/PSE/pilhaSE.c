@@ -1,15 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "arqPSE.h"
+#include <string.h>
 
-struct Node{
-    int dados;
-    struct Node *under;
-};
-
-struct stack{
-    struct Node *top;
-    int stackSize;
-};
 
 int vazia(struct stack *stk){
     return (stk->stackSize == 0 || stk == NULL);
@@ -28,14 +21,14 @@ struct stack *cria(){
     return stk;
 }
 
-int insert(int n, struct stack *stk){
+int insert(info *reg, struct stack *stk){
     if(stk == NULL) return 0;
 
     struct Node *aux = NULL;
     aux = malloc(sizeof(struct Node));
 
     if(aux != NULL){
-        aux->dados = n;
+        memcpy(&(aux->dados), reg, sizeof(info));
         aux->under = stk->top;
         stk->top = aux;
         (stk->stackSize)++;
@@ -57,8 +50,11 @@ int pop(struct stack *stk){
     return 0;
 }
 
-int first(struct stack *stk){
-    if(stk == NULL || vazia(stk)) return 0;
+info first(struct stack *stk){
+    if(stk == NULL || vazia(stk)){
+        info vazio = {-1, -1};
+        return vazio;
+    }
     return stk->top->dados;
 }
 
@@ -71,27 +67,4 @@ struct stack *destroy(struct stack *stk){
     reset(stk);
     free(stk);
     return NULL;
-}
-
-
-int main(){
-    struct stack *stk = cria();
-    if(stk == NULL){
-        printf("Erro ao criar pilha!\n");
-        return 1;
-    }
-
-    insert(10, stk);
-    insert(20, stk); 
-    insert(30, stk);
-
-
-    while(!vazia(stk)){
-        printf("Tamanho da pilha %d\n", stk->stackSize);
-        printf("%d\n", first(stk));
-        pop(stk);
-    }
-
-    destroy(stk);
-
 }
