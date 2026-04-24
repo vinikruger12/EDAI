@@ -109,7 +109,7 @@ int main(){
     }
     
     int jota = indiceJ/(quantJ/quantI)/quantI;
-    vis[indiceI/quantI][jota] = 67;
+    vis[indiceI/quantI][jota] = 5;
 
     printf("\n");
     for(int i = 0;i < n;i++){
